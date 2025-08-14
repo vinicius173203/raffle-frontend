@@ -1,0 +1,221 @@
+/* ========== Raffle UI — Web3 Clean/Trusty ========== */
+/* Reset leve + variáveis de tema */
+:root{
+  --bg-1:#0B1221;           /* navy base */
+  --bg-2:#0F172A;           /* navy deep */
+  --ink:#0f172a;            /* textos escuros em cards */
+  --ink-soft:#475569;       /* textos secundários */
+  --ink-inv:#E5E7EB;        /* textos sobre fundo escuro */
+  --brand-1:#6366F1;        /* indigo */
+  --brand-2:#22D3EE;        /* cyan */
+  --ok:#10B981;             /* success */
+  --warn:#F59E0B;           /* warning */
+  --danger:#EF4444;         /* error */
+
+  --card-bg: rgba(255,255,255,.88);
+  --card-border: rgba(15,23,42,.10);
+  --card-shadow: 0 20px 44px rgba(2,6,23,.18);
+  --glass-blur: saturate(140%) blur(10px);
+
+  --radius-xl: 18px;
+  --radius-lg: 14px;
+  --radius-md: 12px;
+
+  --pad-xl: 24px;
+  --pad-lg: 18px;
+  --pad: 14px;
+
+  --ring: #7C9CF3;          /* cor do foco */
+  --ring-soft: rgba(124,156,243,.35);
+  --surface:#F8FAFC;        /* preenchimento inputs */
+}
+
+/* Reset tipográfico mínimo */
+*{ box-sizing:border-box; }
+html, body, #root{ height:100%; }
+body{
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  color: var(--ink-inv);
+  background:
+    radial-gradient(60rem 40rem at 80% -10%, rgba(124,156,243,.12), transparent),
+    radial-gradient(58rem 36rem at -20% -5%, rgba(34,211,238,.14), transparent),
+    linear-gradient(180deg,var(--bg-1),var(--bg-2));
+}
+
+/* ====== Layout helpers ====== */
+.app { padding: 48px 16px; }
+.shell{ max-width: 1080px; margin: 0 auto; }
+
+.headline{
+  font-weight: 800; letter-spacing:-.02em;
+  background: linear-gradient(90deg,#FFF,#DCE4FF 30%, #BFEDE2 80%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.subtle{ color: #C7D2FE; }
+
+/* Grid 12 cols fluida */
+.grid-12{ display:grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: 16px; }
+@media (max-width: 980px){ .grid-12{ grid-template-columns: 1fr; } }
+
+/* ====== Cards / Sections ====== */
+.card{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--card-shadow);
+  padding: var(--pad-xl);
+  backdrop-filter: var(--glass-blur);
+}
+.card-title{
+  margin:0 0 12px; font-weight: 800; color: var(--ink);
+  font-size: 18px; letter-spacing: -.01em;
+}
+.card-sub{ color: var(--ink-soft); font-size: 13px; }
+
+/* ====== Form ====== */
+label{ color: var(--ink); font-weight: 600; font-size: 13px; }
+.input, .textarea{
+  width:100%; background: var(--surface);
+  border:1px solid rgba(15,23,42,.10);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px; outline: none;
+  color: var(--ink); font-size: 14px;
+  transition: box-shadow .15s ease, border-color .15s ease, background .15s;
+}
+.input:focus, .textarea:focus{
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px var(--ring-soft);
+  background:#fff;
+}
+.textarea{
+  min-height: 140px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+  resize: vertical;
+}
+.input[readonly], .textarea[readonly]{ background: #EEF2FF; }
+
+/* ====== Buttons ====== */
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-weight: 700; border-radius: var(--radius-lg);
+  padding: 11px 16px; border:1px solid transparent;
+  cursor: pointer; transition: transform .08s ease, filter .15s ease, background .15s;
+  user-select: none;
+}
+.btn:active{ transform: translateY(1px); }
+.btn-primary{
+  background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+  color:#fff;
+}
+.btn-primary:hover{ filter: brightness(1.06); }
+.btn-neutral{
+  background: #fff; color: var(--ink);
+  border-color: rgba(15,23,42,.12);
+}
+.btn-neutral:hover{ background:#F3F4F6; }
+.btn-danger{ background: var(--danger); color:#fff; }
+.btn:disabled{ opacity:.6; cursor:not-allowed; }
+
+/* Icon sizing helper */
+.icon-4{ width:1rem; height:1rem; }
+
+/* ====== Pills & badges ====== */
+.badge{
+  display:inline-flex; align-items:center; gap:6px;
+  padding: 6px 10px; border-radius:999px; font-size:12px;
+  background:#EEF2FF; color:#3730A3; border:1px solid #E0E7FF;
+}
+.badge-ok{ background:#D1FAE5; color:#065F46; border-color:#A7F3D0; }
+.badge-warn{ background:#FEF3C7; color:#92400E; border-color:#FDE68A; }
+
+/* ====== Mono blocks (hashes/tx) ====== */
+.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
+.code{
+  background:#F1F5F9; border:1px solid rgba(15,23,42,.12);
+  border-radius: var(--radius-lg); padding: 10px 12px; font-size:12px;
+  word-break: break-all;
+}
+
+/* ====== Status area ====== */
+.status{ font-size: 14px; color: var(--ink); }
+.status.ok{ color: #065F46; }
+.status.warn{ color:#92400E; }
+.status.err{ color:#7F1D1D; }
+
+/* ====== Utility spacing ====== */
+.stack-12 > * + *{ margin-top: 12px; }
+.stack-16 > * + *{ margin-top: 16px; }
+.stack-20 > * + *{ margin-top: 20px; }
+
+.winner {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#EEF2FF;
+  border:1px solid #DBEAFE;
+  border-radius:14px;
+  padding:8px 12px;
+  box-shadow:
+    0 4px 10px rgba(30,64,175,.12),
+    inset 0 1px 0 #FFFFFF;
+  width: fit-content; /* só o tamanho necessário */
+  max-width: 100%;
+}
+
+.trophy {
+  color:#FACC15; /* amarelo dourado */
+  font-size:14px;
+}
+.hidden {
+  display: none;
+}
+
+.mono {
+  font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#0F172A;
+}
+
+.winner .btn {
+  background:#FFFFFF;
+  color:#111827;
+  border:1px solid #E5E7EB;
+  border-radius:999px;
+  padding:4px 8px;
+  font-weight:700;
+  font-size:12px;
+}
+.winner .btn:hover { background:#F9FAFB; }
+
+
+
+/* ====== Head ====== */
+.hero{
+  text-align:center; margin-bottom: 18px;
+}
+.hero h1{
+  margin:0; font-size: clamp(28px, 4vw, 44px);
+}
+.hero p{
+  margin: 6px 0 0; color:#D1D5DB;
+}
+
+/* ====== Links ====== */
+a.link{ color: var(--brand-2); text-decoration: none; }
+a.link:hover{ text-decoration: underline; }
+
+/* ====== Small toast (opcional) ====== */
+.toast{
+  position: fixed; right: 20px; bottom: 20px;
+  background: #111827; color:#F9FAFB; border-radius: 12px;
+  padding: 12px 16px; box-shadow: 0 10px 22px rgba(17,24,39,.35);
+  font-size: 13px; z-index: 50; opacity: .98;
+}
+
+/* Responsividade extra */
+@media (max-width: 640px){
+  .btn{ width:100%; justify-content:center; }
+}

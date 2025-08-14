@@ -185,17 +185,17 @@ async function onLookup() {
       {/* HERO */}
       <motion.div className="hero" initial={{opacity:0, y:-8}} animate={{opacity:1, y:0}}>
         <h1 className="headline">On-chain giveaways</h1>
-        <p>Crie e execute sorteios on-chain, multi-vencedores, com transparência total.</p>
+        <p>Create and run on-chain, multi-winner raffles with full transparency.</p>
       </motion.div>
 
-      {/* TOPO: 3 CARDS */}
+      {/* TOP: 3 CARDS */}
       <div className="grid-12">
         {/* Config */}
         <div className="card" style={{gridColumn:"span 12 / span 12"}}>
-          <h3 className="card-title">Configuração</h3>
+          <h3 className="card-title">Configuration</h3>
           <div className="grid-12">
             <div style={{ gridColumn: "span 12 / span 12" }}>
-              <label>Endereço do contrato</label>
+              <label>Contract address</label>
               <input
                 className="input"
                 value={contractAddr}
@@ -210,7 +210,7 @@ async function onLookup() {
               </button>
               <button onClick={connect} disabled={busy} className="btn btn-primary">
                 {busy ? <Loader2 className="icon-4" style={{animation:"spin .8s linear infinite"}}/> : <Wallet className="icon-4" />}
-                Conectar
+                Connect
               </button>
             </div>
 
@@ -225,7 +225,7 @@ async function onLookup() {
 
         {/* Hashes */}
         <div className="card" style={{gridColumn:"span 12 / span 12"}}>
-          <h3 className="card-title">Integridade</h3>
+          <h3 className="card-title">Integrity</h3>
           <label>participantsHash</label>
           <div className="code mono">{participantsHash || "—"}</div>
           <label style={{marginTop:8}}>secretCommitment</label>
@@ -235,70 +235,56 @@ async function onLookup() {
               tx: {txHash}{" "}
               {explorerTx && (
                 <a className="link" href={explorerTx} target="_blank" rel="noreferrer">
-                  (ver no explorer <ExternalLink className="icon-4" />)
+                  (view on explorer <ExternalLink className="icon-4" />)
                 </a>
               )}
             </div>
           )}
         </div>
-
-        
       </div>
 
-      {/* CRIAR SORTEIO */}
+      {/* CREATE RAFFLE */}
       <div className="card" style={{marginTop:16}}>
         <div style={{display:"flex", alignItems:"center", gap:8, marginBottom:8}}>
           <Upload className="icon-4" style={{color:"#6366F1"}}/>
-          <h2 className="card-title" style={{margin:0}}>Criar sorteio</h2>
+          <h2 className="card-title" style={{margin:0}}>Create raffle</h2>
         </div>
 
         <div className="grid-12">
           <div style={{gridColumn:"span 12 / span 12"}}>
-            <label>Nome do evento</label>
+            <label>Event name</label>
             <input className="input" value={name} onChange={e=>setName(e.target.value)} />
           </div>
 
           <div style={{gridColumn:"span 12 / span 12", marginTop:12}}>
-            <label>Nº de vencedores</label>
+            <label>Number of winners</label>
             <input className="input" type="number" min={1} value={numWinners} onChange={e=>setNumWinners(Number(e.target.value))} />
           </div>
 
           <div style={{gridColumn:"span 12 / span 12", marginTop:12}}>
-            <label>Participantes (uma carteira por linha) ou CSV/TXT</label>
+            <label>Participants (one wallet per line) or CSV/TXT</label>
             <textarea className="textarea" value={participantsText} onChange={e=>setParticipantsText(e.target.value)} placeholder={"0xabc...\n0xdef..."} />
             <div style={{display:"flex", gap:8, marginTop:8, alignItems:"center"}}>
               <input ref={fileRef} type="file" accept=".csv,.txt" onChange={onFile} className="hidden" />
-              <button onClick={()=>fileRef.current?.click()} className="btn btn-neutral"><FileUp className="icon-4" /> Carregar arquivo</button>
-              <span className="card-sub">Endereços únicos: {Array.isArray(addresses)?addresses.length:0}</span>
+              <button onClick={()=>fileRef.current?.click()} className="btn btn-neutral"><FileUp className="icon-4" /> Upload file</button>
+              <span className="card-sub">Unique addresses: {Array.isArray(addresses)?addresses.length:0}</span>
             </div>
           </div>
-/*
-          <div style={{gridColumn:"span 12 / span 12", marginTop:12}}>
-            <label>Secret (reveal)</label>
-            <div style={{display:"flex", gap:8}}>
-              <input className="input mono" value={secret} onChange={e=>setSecret(e.target.value)} />
-              <button onClick={()=>setSecret(randomSecret())} className="btn btn-neutral">Gerar</button>
-              <button onClick={()=>copy(secret)} className="btn btn-neutral"><Copy className="icon-4" /></button>
-            </div>
-            <div className="card-sub" style={{marginTop:6, color:"#92400E"}}>
-              <AlertTriangle className="icon-4" style={{marginRight:6}}/> Guarde o secret — você precisará dele para sortear.
-            </div>
-          </div>
-        </div>*/
+        </div>
 
         <div style={{display:"flex", flexWrap:"wrap", gap:12, marginTop:14, alignItems:"center"}}>
           <button onClick={onCreate} disabled={busy} className="btn btn-primary">
             {busy ? <Loader2 className="icon-4" style={{animation:"spin .8s linear infinite"}}/> : <Upload className="icon-4" />}
-            Criar sorteio
+            Create raffle
           </button>
         </div>
       </div>
 
-      {/* SORTEAR */}
+      {/* DRAW WINNERS */}
       <div className="card" style={{marginTop:16}}>
         <div style={{display:"flex", alignItems:"center", gap:8, marginBottom:8}}>
           <Shuffle className="icon-4" style={{color:"#6366F1"}}/>
-          <h2 className="card-title" style={{margin:0}}>Sortear vencedores</h2>
+          <h2 className="card-title" style={{margin:0}}>Draw winners</h2>
         </div>
 
         <div className="grid-12">
@@ -311,19 +297,19 @@ async function onLookup() {
         <div style={{marginTop:12}}>
           <button onClick={onDraw} disabled={busy} className="btn btn-neutral">
             {busy ? <Loader2 className="icon-4" style={{animation:"spin .8s linear infinite"}}/> : <Shuffle className="icon-4" />}
-            Sortear on-chain
+            Draw on-chain
           </button>
         </div>
 
         {winners?.length > 0 && (
           <div style={{marginTop:16}}>
-            <div className="card-sub" style={{fontWeight:700}}>Vencedores</div>
+            <div className="card-sub" style={{fontWeight:700}}>Winners</div>
             <div style={{marginTop:8, display:'grid', gap:8}}>
               {winners.map((w,i)=>(
                 <div key={w+String(i)} className="winner" style={{width:'fit-content'}}>
                   <Trophy className="icon-4" style={{color:"#FACC15"}}/>
                   <span className="mono">{w}</span>
-                  <button onClick={()=>copy(w)} className="btn">copiar</button>
+                  <button onClick={()=>copy(w)} className="btn">copy</button>
                 </div>
               ))}
             </div>
@@ -331,10 +317,10 @@ async function onLookup() {
         )}
       </div>
 
-      {/* CONSULTAR SORTEIO POR ID */}
+      {/* LOOKUP RAFFLE BY ID */}
       <div className="card" style={{marginTop:16}}>
         <div style={{display:"flex", alignItems:"center", gap:8, marginBottom:8}}>
-          <h2 className="card-title" style={{margin:0}}>Consultar sorteio</h2>
+          <h2 className="card-title" style={{margin:0}}>Lookup raffle</h2>
         </div>
 
         <div className="grid-12">
@@ -345,27 +331,27 @@ async function onLookup() {
               value={lookupId}
               onChange={(e)=>setLookupId(e.target.value)}
               onKeyDown={(e)=> e.key==='Enter' && onLookup()}
-              placeholder="ex.: 0, 1, 2…"
+              placeholder="e.g., 0, 1, 2…"
             />
           </div>
         </div>
 
         <div style={{marginTop:12, display:'flex', gap:8, alignItems:'center'}}>
           <button onClick={onLookup} disabled={lookupBusy} className="btn btn-primary">
-            {lookupBusy ? "Buscando..." : "Buscar vencedores"}
+            {lookupBusy ? "Fetching..." : "Get winners"}
           </button>
           {lookupMsg && <div className="status">{lookupMsg}</div>}
         </div>
 
         {lookupWinners.length > 0 && (
           <div style={{marginTop:16}}>
-            <div className="card-sub" style={{fontWeight:700}}>Vencedores</div>
+            <div className="card-sub" style={{fontWeight:700}}>Winners</div>
             <div style={{marginTop:8, display:'grid', gap:8}}>
               {lookupWinners.map((w,i)=>(
                 <div key={w+String(i)} className="winner" style={{width:'fit-content'}}>
                   <Trophy className="icon-4" style={{color:"#FACC15"}}/>
                   <span className="mono">{w}</span>
-                  <button className="btn" onClick={()=>navigator.clipboard?.writeText(w)}>copiar</button>
+                  <button className="btn" onClick={()=>navigator.clipboard?.writeText(w)}>copy</button>
                 </div>
               ))}
             </div>
@@ -377,10 +363,10 @@ async function onLookup() {
       <div style={{marginTop:18, textAlign:"center"}}>
         <span className="card-sub">
           <ListChecks className="icon-4" style={{marginRight:6}}/>
-          Use apenas na Monad Testnet (10143). Para produção, prefira VRF.
         </span>
       </div>
     </div>
   </div>
 );
+
 }

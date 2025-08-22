@@ -178,6 +178,32 @@ async function onLookup() {
   function copy(v){ navigator.clipboard?.writeText(v||""); setStatus("Copiado!"); }
 
   const explorerTx = txHash ? `https://monad-testnet.socialscan.io/tx/${txHash}` : "";
+  function csvEscape(v) {
+    if (v === null || v === undefined) return "";
+    const s = String(v);
+    // envolve em aspas e duplica aspas internas
+    return `"${s.replace(/"/g, '""')}"`;
+  }
+
+  function exportWinnersCSV() {
+    if (!winners || winners.length === 0) return;
+    const header = ["position","address","raffleId","name"].join(",") + "\n";
+    const lines = winners
+      .map((addr, i) => [i + 1, addr, raffleId || "", name || ""].map(csvEscape).join(","))
+      .join("\n");
+    const csv = header + lines;
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `winners_${raffleId || "unknown"}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setStatus("CSV gerado!");
+  }
 
   return (
   <div className="app">
@@ -185,7 +211,7 @@ async function onLookup() {
       {/* HERO */}
       <motion.div className="hero" initial={{opacity:0, y:-8}} animate={{opacity:1, y:0}}>
         <h1 className="headline">On-chain giveaways</h1>
-        <p>Create and run on-chain, multi-winner raffles with full transparency.</p>
+        <p>Create and run on-chain, multi-winner giveaway with full transparency.</p>
       </motion.div>
 
       {/* TOP: 3 CARDS */}
@@ -247,7 +273,7 @@ async function onLookup() {
       <div className="card" style={{marginTop:16}}>
         <div style={{display:"flex", alignItems:"center", gap:8, marginBottom:8}}>
           <Upload className="icon-4" style={{color:"#6366F1"}}/>
-          <h2 className="card-title" style={{margin:0}}>Create raffle</h2>
+          <h2 className="card-title" style={{margin:0}}>Create giveaway</h2>
         </div>
 
         <div className="grid-12">
@@ -275,57 +301,79 @@ async function onLookup() {
         <div style={{display:"flex", flexWrap:"wrap", gap:12, marginTop:14, alignItems:"center"}}>
           <button onClick={onCreate} disabled={busy} className="btn btn-primary">
             {busy ? <Loader2 className="icon-4" style={{animation:"spin .8s linear infinite"}}/> : <Upload className="icon-4" />}
-            Create raffle
+            Create giveaway
           </button>
         </div>
       </div>
 
       {/* DRAW WINNERS */}
-      <div className="card" style={{marginTop:16}}>
-        <div style={{display:"flex", alignItems:"center", gap:8, marginBottom:8}}>
-          <Shuffle className="icon-4" style={{color:"#6366F1"}}/>
-          <h2 className="card-title" style={{margin:0}}>Draw winners</h2>
-        </div>
+<div className="card" style={{ marginTop: 16 }}>
+  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+    <Shuffle className="icon-4" style={{ color: "#6366F1" }} />
+    <h2 className="card-title" style={{ margin: 0 }}>Draw winners</h2>
+  </div>
 
-        <div className="grid-12">
-          <div style={{gridColumn:"span 12 / span 12"}}>
-            <label>Raffle ID</label>
-            <input className="input" value={raffleId} onChange={e=>setRaffleId(e.target.value)} />
-          </div>
-        </div>
-
-        <div style={{marginTop:12}}>
-          <button onClick={onDraw} disabled={busy} className="btn btn-neutral">
-            {busy ? <Loader2 className="icon-4" style={{animation:"spin .8s linear infinite"}}/> : <Shuffle className="icon-4" />}
-            Draw on-chain
-          </button>
-        </div>
-
-        {winners?.length > 0 && (
-          <div style={{marginTop:16}}>
-            <div className="card-sub" style={{fontWeight:700}}>Winners</div>
-            <div style={{marginTop:8, display:'grid', gap:8}}>
-              {winners.map((w,i)=>(
-                <div key={w+String(i)} className="winner" style={{width:'fit-content'}}>
-                  <Trophy className="icon-4" style={{color:"#FACC15"}}/>
-                  <span className="mono">{w}</span>
-                  <button onClick={()=>copy(w)} className="btn">copy</button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+  {/* toolbar: ID + Draw (esquerda) | Export CSV (direita) */}
+  <div className="draw-toolbar">
+    <div className="draw-left">
+      <div className="field-inline">
+        <label>giveaway ID</label>
+        <input
+          className="input input-id"
+          value={raffleId}
+          onChange={(e) => setRaffleId(e.target.value)}
+          placeholder="ex.: 5"
+        />
       </div>
+
+      <button onClick={onDraw} disabled={busy} className="btn btn-neutral">
+        {busy ? (
+          <Loader2 className="icon-4" style={{ animation: "spin .8s linear infinite" }} />
+        ) : (
+          <Shuffle className="icon-4" />
+        )}
+        Draw on-chain
+      </button>
+    </div>
+
+    <div className="draw-right">
+      <button
+        onClick={exportWinnersCSV}
+        className="btn btn-primary"
+        disabled={!winners || winners.length === 0}
+        title={(!winners || winners.length === 0) ? "Faça o sorteio para exportar" : "Exportar CSV dos vencedores"}
+      >
+        Export CSV
+      </button>
+    </div>
+  </div>
+
+  {winners?.length > 0 && (
+    <div style={{ marginTop: 16 }}>
+      <div className="card-sub" style={{ fontWeight: 700 }}>Winners</div>
+      <div style={{ marginTop: 8, display: 'grid', gap: 8 }}>
+        {winners.map((w, i) => (
+          <div key={w + String(i)} className="winner" style={{ width: 'fit-content' }}>
+            <Trophy className="icon-4" style={{ color: "#FACC15" }} />
+            <span className="mono">{w}</span>
+            <button onClick={() => copy(w)} className="btn">copy</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
 
       {/* LOOKUP RAFFLE BY ID */}
       <div className="card" style={{marginTop:16}}>
         <div style={{display:"flex", alignItems:"center", gap:8, marginBottom:8}}>
-          <h2 className="card-title" style={{margin:0}}>Lookup raffle</h2>
+          <h2 className="card-title" style={{margin:0}}>Lookup giveaway</h2>
         </div>
 
         <div className="grid-12">
           <div style={{gridColumn:"span 12 / span 12"}}>
-            <label>Raffle ID</label>
+            <label>Giveaway ID</label>
             <input
               className="input"
               value={lookupId}

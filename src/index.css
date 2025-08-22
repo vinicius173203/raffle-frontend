@@ -83,6 +83,47 @@ label{ color: var(--ink); font-weight: 600; font-size: 13px; }
   color: var(--ink); font-size: 14px;
   transition: box-shadow .15s ease, border-color .15s ease, background .15s;
 }
+/* ====== Draw winners toolbar ====== */
+.draw-toolbar{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.draw-left{
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  flex:1 1 auto;
+  min-width: 260px;
+}
+
+.field-inline label{
+  display:block;
+  margin-bottom:6px;
+}
+
+.input-id{
+  width: 260px;              /* encolhe o campo ID */
+  max-width: 100%;
+}
+
+.draw-right{
+  display:flex;
+  align-items:flex-end;
+  justify-content:flex-end;
+  flex: 0 0 auto;
+}
+
+/* responsivo: em telas pequenas, quebra bonitinho */
+@media (max-width: 640px){
+  .draw-toolbar { align-items: stretch; }
+  .draw-right { width:100%; justify-content: flex-start; }
+  .input-id { width: 100%; }
+}
+
 .input:focus, .textarea:focus{
   border-color: var(--ring);
   box-shadow: 0 0 0 3px var(--ring-soft);
